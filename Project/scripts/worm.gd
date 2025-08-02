@@ -5,6 +5,15 @@ class_name Worm
 @export var segments_scene: PackedScene
 @export var segments: Array[Segment]
 
+@export_category("Abililties")
+@export var growing: bool # Things that you eat make you grow!
+@export var hungry: bool # You can eat brittle things, too!
+@export var mobile: bool # You can back up to reverse the worm!
+@export var agile: bool # You can cross the worm and go over it!
+@export var snip: bool # Slice that end off!
+@export var gun: bool # Bang bang.
+
+
 var motion_dir: Vector2i
 
 
@@ -75,11 +84,11 @@ func adjust_worm() -> void:
 			segment.adjust(prev, next)
 
 
-func grow_worm() -> void:
+func grow_worm(dir: Vector2i = Vector2i.ZERO) -> void:
 	var segment: Segment = segments_scene.instantiate() as Segment
 	var end: Segment = segments.back() as Segment
 	add_child(segment)
 	move_child(segment, 0)
-	segment.tile_position = end.tile_position
+	segment.tile_position = end.tile_position + dir
 	segment.place()
 	segments.append(segment)

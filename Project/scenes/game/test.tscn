@@ -14,6 +14,10 @@ tile_set = ExtResource("1_r5dwv")
 script = ExtResource("2_aqu6m")
 segments_scene = ExtResource("3_vfnck")
 segments = [NodePath("Head"), NodePath("Segment1"), NodePath("Segment2")]
+mobile = null
+agile = null
+snip = null
+gun = null
 metadata/_custom_type_script = "uid://cevhciism2lpe"
 
 [node name="Segment2" parent="Worm" instance=ExtResource("3_vfnck")]
