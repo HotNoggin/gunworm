@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bun5wf1rv748r"]
+
+[ext_resource type="Script" uid="uid://w3gw7bunlru4" path="res://scripts/segment.gd" id="1_kos3q"]
+[ext_resource type="Texture2D" uid="uid://d2hhsyal5j23k" path="res://assets/graphics/worm.png" id="3_cd7ip"]
+
+[node name="Segment" type="Node2D" node_paths=PackedStringArray("sprite")]
+position = Vector2(4, 4)
+script = ExtResource("1_kos3q")
+sprite = NodePath("Sprite2D")
+solid = true
+brittle = true
+auto_position = true
+update_in_editor = true
+metadata/_custom_type_script = "uid://w3gw7bunlru4"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3_cd7ip")
+hframes = 5
+frame = 4

@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://hhnefd4pj88t"]
+
+[ext_resource type="Script" uid="uid://chxjeikcdv450" path="res://scripts/tile.gd" id="1_ysn3e"]
+[ext_resource type="Texture2D" uid="uid://cbr1in3l21fn8" path="res://assets/graphics/leaf.png" id="2_70cv3"]
+
+[node name="Leaf" type="Node2D"]
+script = ExtResource("1_ysn3e")
+solid = true
+tasty = true
+brittle = true
+metadata/_custom_type_script = "uid://chxjeikcdv450"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_70cv3")
