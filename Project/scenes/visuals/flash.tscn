@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://bvps27tngppph"]
+
+[ext_resource type="Texture2D" uid="uid://dx7ca718lqlp1" path="res://assets/graphics/flash.png" id="1_rtqp3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_urbsc"]
+atlas = ExtResource("1_rtqp3")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_norhg"]
+atlas = ExtResource("1_rtqp3")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y428d"]
+atlas = ExtResource("1_rtqp3")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wf14o"]
+atlas = ExtResource("1_rtqp3")
+region = Rect2(24, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_14ev1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_urbsc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_norhg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y428d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wf14o")
+}],
+"loop": false,
+"name": &"default",
+"speed": 15.0
+}]
+
+[node name="Flash" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_14ev1")
+autoplay = "default"
+centered = false
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="queue_free"]

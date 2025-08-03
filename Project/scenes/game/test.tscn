@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=4 uid="uid://ddvh45pfev23t"]
+[gd_scene load_steps=6 format=4 uid="uid://ddvh45pfev23t"]
 
 [ext_resource type="TileSet" uid="uid://bpo3m6cvpyskv" path="res://resources/tiles.tres" id="1_r5dwv"]
 [ext_resource type="Script" uid="uid://cevhciism2lpe" path="res://scripts/worm.gd" id="2_aqu6m"]
 [ext_resource type="PackedScene" uid="uid://bun5wf1rv748r" path="res://scenes/tiles/segment.tscn" id="3_vfnck"]
 [ext_resource type="PackedScene" uid="uid://ypq7pwfs7dun" path="res://scenes/tiles/snip.tscn" id="4_aqu6m"]
+[ext_resource type="PackedScene" uid="uid://bvps27tngppph" path="res://scenes/visuals/flash.tscn" id="5_vfnck"]
 
 [node name="Test" type="Node2D"]
 
@@ -15,6 +16,7 @@ tile_set = ExtResource("1_r5dwv")
 script = ExtResource("2_aqu6m")
 segments_scene = ExtResource("3_vfnck")
 snip_scene = ExtResource("4_aqu6m")
+flash_scene = ExtResource("5_vfnck")
 segments = [NodePath("Head"), NodePath("Segment1"), NodePath("Segment2")]
 growing = true
 hungry = true

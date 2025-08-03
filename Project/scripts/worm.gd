@@ -2,18 +2,23 @@
 extends Node
 class_name Worm
 
+@export_category("Scenes")
 @export var segments_scene: PackedScene
 @export var snip_scene: PackedScene
+@export var flash_scene: PackedScene
+@export_category("Worm")
 @export var segments: Array[Segment]
 
 @export_category("Abililties")
 @export var growing: bool # Things that you eat make you grow!
 @export var hungry: bool # You can eat brittle things, too!
 @export var smart: bool # You can back up to reverse the worm!
+@export var turd: bool # You can snip off the end of yourself.
 @export var gun: bool # Bang bang.
 
 
 var motion_dir: Vector2i
+var shooting: bool
 
 
 # Called when the node enters the scene tree for the first time.
@@ -36,13 +41,17 @@ func _process(_delta: float) -> void:
 		motion_dir = Vector2i.LEFT
 	if Input.is_action_just_pressed("right"):
 		motion_dir = Vector2i.RIGHT
+	shooting = gun and Input.is_action_just_pressed("shoot")
 	
-	if motion_dir != Vector2i.ZERO:
+	if motion_dir != Vector2i.ZERO or shooting:
 		do_turn()
 
 
 func do_turn() -> void:
-	try_move()
+	if shooting:
+		shoot()
+	elif motion_dir != Vector2i.ZERO:
+		try_move()
 	adjust_worm()
 
 
@@ -76,6 +85,26 @@ func move_worm() -> void:
 	head.tile_position += motion_dir
 
 
+func shoot() -> void:
+	var head: Segment = segments.front() as Segment
+	var second: Segment = segments[1] as Segment
+	var dir: Vector2i = head.tile_position - second.tile_position
+	var where: Vector2i = head.tile_position
+	for i: int in range(0, 16):
+		(segments.back() as Segment).queue_free()
+		where += dir
+		if Tile.has(where):
+			# Destroy brittle tiles
+			var tile: Tile = Tile.at(where)
+			if tile.brittle:
+				tile.queue_free()
+			else:
+				break
+		var flash: Node2D = flash_scene.instantiate() as Node2D
+		add_sibling(flash)
+		flash.global_position = where * 8
+
+
 func reverse_worm() -> void:
 	var tail: Segment = segments.back() as Segment
 	var second: Segment = segments[segments.size() - 2] as Segment
@@ -93,6 +122,10 @@ func reverse_worm() -> void:
 
 
 func adjust_worm() -> void:
+	for i: int in range(segments.size() - 1, 0, -1):
+		var segment: Segment = segments[i]
+		if not is_instance_valid(segment) or segment.is_queued_for_deletion():
+			cut_worm(segment)
 	if segments.size() > 0:
 		for i: int in range(0, segments.size()):
 			var segment: Segment = segments[i]
