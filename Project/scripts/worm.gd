@@ -3,14 +3,13 @@ extends Node
 class_name Worm
 
 @export var segments_scene: PackedScene
+@export var snip_scene: PackedScene
 @export var segments: Array[Segment]
 
 @export_category("Abililties")
 @export var growing: bool # Things that you eat make you grow!
 @export var hungry: bool # You can eat brittle things, too!
-@export var mobile: bool # You can back up to reverse the worm!
-@export var agile: bool # You can cross the worm and go over it!
-@export var snip: bool # Slice that end off!
+@export var smart: bool # You can back up to reverse the worm!
 @export var gun: bool # Bang bang.
 
 
@@ -52,9 +51,14 @@ func try_move() -> void:
 	var goal_pos: Vector2i = head.tile_position + motion_dir
 	if Tile.has(goal_pos):
 		var tile: Tile = Tile.at(goal_pos)
-		if tile.tasty:
-			tile.queue_free()
-			grow_worm()
+		if Tile.at(goal_pos) == segments[1]:
+			if smart: reverse_worm()
+		elif tile.tasty or (tile.brittle and hungry):
+			if tile is Segment:
+				cut_worm(tile as Segment)
+			else:
+				tile.queue_free()
+			if growing and tile.tasty: grow_worm()
 			move_worm()
 	else:
 		move_worm()
@@ -64,13 +68,28 @@ func move_worm() -> void:
 	var head: Segment = segments.front() as Segment
 	var positions: Array[Vector2i]
 	# Move
-	for i: int in range(0, segments.size()):
-		var segment: Segment = segments[i]
+	for segment: Segment in segments:
 		positions.append(segment.tile_position)
 	for i: int in range(1, segments.size()):
 		var segment: Segment = segments[i] as Segment
 		segment.tile_position = positions[i - 1]
 	head.tile_position += motion_dir
+
+
+func reverse_worm() -> void:
+	var tail: Segment = segments.back() as Segment
+	var second: Segment = segments[segments.size() - 2] as Segment
+	var dir: Vector2i = tail.tile_position - second.tile_position
+	var goal: Vector2i = tail.tile_position + dir
+	if Tile.has(goal): return
+	var positions: Array[Vector2i]
+	# Move
+	for segment: Segment in segments:
+		positions.append(segment.tile_position)
+	for i: int in range(0, segments.size() - 1):
+		var segment: Segment = segments[i]
+		segment.tile_position = positions[i + 1]
+	tail.tile_position = goal
 
 
 func adjust_worm() -> void:
@@ -92,3 +111,23 @@ func grow_worm(dir: Vector2i = Vector2i.ZERO) -> void:
 	segment.tile_position = end.tile_position + dir
 	segment.place()
 	segments.append(segment)
+
+
+func cut_worm(tile: Segment, where: int = -1) -> void:
+	var cutting: bool = false
+	var endsize: int = segments.size()
+	for i: int in range(0, segments.size()):
+		var segment: Segment = segments[i]
+		if segment == tile or i == where:
+			cutting = true
+			endsize = i
+		if cutting:
+			if endsize == i:
+				segment.queue_free()
+			else:
+				var snip: Tile = snip_scene.instantiate() as Tile
+				add_sibling(snip)
+				snip.tile_position = segment.tile_position
+				segment.queue_free()
+				snip.place()
+	segments.resize(endsize)

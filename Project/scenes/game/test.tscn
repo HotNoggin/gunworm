@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=4 uid="uid://ddvh45pfev23t"]
+[gd_scene load_steps=5 format=4 uid="uid://ddvh45pfev23t"]
 
 [ext_resource type="TileSet" uid="uid://bpo3m6cvpyskv" path="res://resources/tiles.tres" id="1_r5dwv"]
 [ext_resource type="Script" uid="uid://cevhciism2lpe" path="res://scripts/worm.gd" id="2_aqu6m"]
 [ext_resource type="PackedScene" uid="uid://bun5wf1rv748r" path="res://scenes/tiles/segment.tscn" id="3_vfnck"]
+[ext_resource type="PackedScene" uid="uid://ypq7pwfs7dun" path="res://scenes/tiles/snip.tscn" id="4_aqu6m"]
 
 [node name="Test" type="Node2D"]
 
@@ -13,11 +14,12 @@ tile_set = ExtResource("1_r5dwv")
 [node name="Worm" type="Node" parent="." node_paths=PackedStringArray("segments")]
 script = ExtResource("2_aqu6m")
 segments_scene = ExtResource("3_vfnck")
+snip_scene = ExtResource("4_aqu6m")
 segments = [NodePath("Head"), NodePath("Segment1"), NodePath("Segment2")]
-mobile = null
-agile = null
-snip = null
-gun = null
+growing = true
+hungry = true
+smart = true
+gun = true
 metadata/_custom_type_script = "uid://cevhciism2lpe"
 
 [node name="Segment2" parent="Worm" instance=ExtResource("3_vfnck")]

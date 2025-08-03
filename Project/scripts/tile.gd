@@ -41,6 +41,7 @@ func _ready() -> void:
 	if auto_position:
 		tile_position = global_position / 8
 	place()
+	update()
 
 
 func place() -> void:
@@ -52,5 +53,7 @@ func place() -> void:
 func _enter_tree() -> void:
 	Tile.all_tiles.append(self)
 
+
 func _exit_tree() -> void:
 	Tile.all_tiles.erase(self)
+	update()
