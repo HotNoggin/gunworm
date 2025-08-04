@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://ddm2unh4fb3hy"]
+
+[ext_resource type="Script" uid="uid://b5cuuq3d7iln" path="res://scripts/map_editor.gd" id="1_uvxcs"]
+[ext_resource type="Resource" uid="uid://bughbyajjrqnr" path="res://resources/world_map.tres" id="2_5cjks"]
+[ext_resource type="PackedScene" uid="uid://ddvh45pfev23t" path="res://scenes/world/test.tscn" id="3_wc0o3"]
+
+[node name="MapEditor" type="Node2D"]
+script = ExtResource("1_uvxcs")
+world_map = ExtResource("2_5cjks")
+
+[node name="Test" parent="." instance=ExtResource("3_wc0o3")]
+
+[node name="Test2" parent="." instance=ExtResource("3_wc0o3")]
+position = Vector2(128, 0)
+
+[node name="Test3" parent="." instance=ExtResource("3_wc0o3")]
+position = Vector2(128, 128)
+
+[node name="Test4" parent="." instance=ExtResource("3_wc0o3")]
+position = Vector2(256, 128)
+
+[node name="Test5" parent="." instance=ExtResource("3_wc0o3")]
+position = Vector2(256, 0)
+
+[node name="Test6" parent="." instance=ExtResource("3_wc0o3")]
+position = Vector2(256, 256)
+
+[node name="Test7" parent="." instance=ExtResource("3_wc0o3")]
+position = Vector2(384, 128)
