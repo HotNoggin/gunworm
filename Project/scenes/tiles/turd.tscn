@@ -1,12 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dvs75ubd48dk4"]
+[gd_scene load_steps=3 format=3 uid="uid://b0qscbp78dc5x"]
 
-[ext_resource type="Script" uid="uid://chxjeikcdv450" path="res://scripts/tile.gd" id="1_jjk0g"]
+[ext_resource type="Script" uid="uid://bhj62vi0j1fup" path="res://scripts/tile.gd" id="1_jjk0g"]
 [ext_resource type="Texture2D" uid="uid://dow1b3hhbmhj8" path="res://assets/graphics/turd.png" id="2_2uqbe"]
 
 [node name="Turd" type="Node2D"]
 script = ExtResource("1_jjk0g")
-solid = true
-metadata/_custom_type_script = "uid://chxjeikcdv450"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_2uqbe")

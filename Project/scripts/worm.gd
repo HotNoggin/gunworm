@@ -2,22 +2,20 @@
 extends Node
 class_name Worm
 
+signal worm_changed(worm: Worm)
+
 @export_category("Scenes")
 @export var segments_scene: PackedScene
 @export var turd_scene: PackedScene
 @export var snip_scene: PackedScene
 @export var flash_scene: PackedScene
 @export_category("Worm")
+@export var worm_data: WormData
 @export var segments: Array[Segment]
 @export var dead_texture: Texture2D
 @export var reset_timer: Timer
 
-@export_category("Abililties")
-@export var growing: bool # Things that you eat make you grow!
-@export var hungry: bool # You can eat brittle things, too!
-@export var smart: bool # You can back up to reverse the worm!
-@export var turd: bool # You can snip off the end of yourself.
-@export var gun: bool # Bang bang.
+@export var able: Abilities
 
 var motion_dir: Vector2i
 var shooting: bool
@@ -31,11 +29,11 @@ func _ready() -> void:
 	adjust_worm()
 	if Engine.is_editor_hint():
 		return
-	reset_timer.timeout.connect(get_tree().reload_current_scene)
 
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
+		adjust_worm()
 		return
 	
 	if segments.size() < 3:
@@ -54,8 +52,8 @@ func _process(_delta: float) -> void:
 		motion_dir = Vector2i.LEFT
 	if Input.is_action_just_pressed("right"):
 		motion_dir = Vector2i.RIGHT
-	shooting = gun and Input.is_action_just_pressed("shoot")
-	pooping = turd and Input.is_action_just_pressed("poop")
+	shooting = able.gun and Input.is_action_just_pressed("shoot")
+	pooping = able.turd and Input.is_action_just_pressed("poop")
 	killing = Input.is_action_just_pressed("reset")
 	
 	if motion_dir != Vector2i.ZERO or shooting or pooping or killing:
@@ -71,7 +69,10 @@ func do_turn() -> void:
 		drop_turd()
 	elif motion_dir != Vector2i.ZERO:
 		try_move()
+	Tile.do_turns()
 	adjust_worm()
+	worm_changed.emit(self)
+	move_rooms()
 
 
 func try_move() -> void:
@@ -80,13 +81,15 @@ func try_move() -> void:
 	if Tile.has(goal_pos):
 		var tile: Tile = Tile.at(goal_pos)
 		if Tile.at(goal_pos) == segments[1]:
-			if smart: reverse_worm()
-		elif tile.tasty or (tile.brittle and hungry):
+			if able.smart: reverse_worm()
+		elif tile.tasty or (tile.brittle and able.hungry):
 			if tile is Segment:
 				cut_worm(tile as Segment)
 			else:
+				if tile is Ability:
+					collect(tile as Ability)
 				tile.queue_free()
-			if growing and tile.tasty: grow_worm()
+			if able.growing and tile.tasty: grow_worm()
 			move_worm()
 	else:
 		move_worm()
@@ -102,6 +105,18 @@ func move_worm() -> void:
 		var segment: Segment = segments[i] as Segment
 		segment.tile_position = positions[i - 1]
 	head.tile_position += motion_dir
+
+
+func move_rooms() -> void:
+	var head: Segment = segments.front() as Segment
+	var pos: Vector2i = head.tile_position
+	var move_dir: Vector2i = Vector2i.ZERO
+	if pos.x > 15: move_dir.x = 1
+	if pos.x < 0: move_dir.x = -1
+	if pos.y > 15: move_dir.y = 1
+	if pos.y < 0: move_dir.y = -1
+	if move_dir != Vector2i.ZERO:
+		RoomManager.manager.move_room(move_dir)
 
 
 func shoot() -> void:
@@ -141,29 +156,35 @@ func reverse_worm() -> void:
 
 
 func adjust_worm() -> void:
+	if segments.size() < 0: return
+	
 	for i: int in range(segments.size() - 1, 0, -1):
 		var segment: Segment = segments[i]
 		if not is_instance_valid(segment) or segment.is_queued_for_deletion():
 			cut_worm(segment)
+	
 	if dead or segments.size() < 3:
 		for segment: Segment in segments:
 			segment.sprite.texture = dead_texture
-	if segments.size() > 0:
-		for i: int in range(0, segments.size()):
-			var segment: Segment = segments[i]
-			# Previous segment if this is NOT the head
-			var prev: Segment = segments[i - 1] if i > 0 else null
-			# Next segment if this is NOT the tail
-			var next: Segment = segments[i + 1] if i < segments.size() - 1 else null
-			segment.adjust(prev, next)
+	
+	for i: int in range(0, segments.size()):
+		var segment: Segment = segments[i]
+		# Previous segment if this is NOT the head
+		var prev: Segment = segments[i - 1] if i > 0 else null
+		# Next segment if this is NOT the tail
+		var next: Segment = segments[i + 1] if i < segments.size() - 1 else null
+		segment.adjust(prev, next)
 
 
-func grow_worm(dir: Vector2i = Vector2i.ZERO) -> void:
+func grow_worm(offset: Vector2i = Vector2i.ZERO) -> void:
 	var segment: Segment = segments_scene.instantiate() as Segment
-	var end: Segment = segments.back() as Segment
+	var end: Segment = null
+	if not segments.is_empty(): end = segments.back() as Segment
 	add_child(segment)
 	move_child(segment, 0)
-	segment.tile_position = end.tile_position + dir
+	var end_position: Vector2i
+	if is_instance_valid(end): end_position = end.tile_position
+	segment.tile_position = end_position + offset
 	segment.place()
 	segments.append(segment)
 
@@ -177,7 +198,7 @@ func drop_turd() -> void:
 	tile.place()
 
 
-func cut_worm(tile: Segment, where: int = -1) -> void:
+func cut_worm(tile: Segment, where: int = -1, drop_snips: bool = true) -> void:
 	var cutting: bool = false
 	var endsize: int = segments.size()
 	for i: int in range(0, segments.size()):
@@ -186,7 +207,7 @@ func cut_worm(tile: Segment, where: int = -1) -> void:
 			cutting = true
 			endsize = i
 		if cutting:
-			if endsize == i:
+			if endsize == i or (not drop_snips):
 				segment.queue_free()
 			else:
 				var snip: Tile = snip_scene.instantiate() as Tile
@@ -195,3 +216,14 @@ func cut_worm(tile: Segment, where: int = -1) -> void:
 				segment.queue_free()
 				snip.place()
 	segments.resize(endsize)
+
+
+func collect(ability: Ability) -> void:
+	ability.flash()
+	SaveData.loaded.ability_names.append(ability.ability_name)
+	var has: Abilities = ability.abilities
+	if has.growing: able.growing = true
+	if has.hungry: able.hungry = true
+	if has.turd: able.turd = true
+	if has.smart: able.smart = true
+	if has.gun: able.gun = true

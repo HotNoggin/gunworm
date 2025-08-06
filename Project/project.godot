@@ -11,7 +11,9 @@ config_version=5
 [application]
 
 config/name="gunworm"
-run/main_scene="uid://ddvh45pfev23t"
+run/main_scene="uid://bip1fxcet1apf"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Hot Noggin Studios/gunworm"
 config/features=PackedStringArray("4.4")
 run/max_fps=30
 config/icon="res://assets/graphics/icon.svg"
@@ -30,8 +32,12 @@ window/size/viewport_width=128
 window/size/viewport_height=128
 window/size/window_width_override=768
 window/size/window_height_override=768
-window/stretch/mode="viewport"
+window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/safe_resource_loader/plugin.cfg")
 
 [file_customization]
 

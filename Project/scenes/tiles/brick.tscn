@@ -1,12 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://dmbed62mjooxf"]
 
-[ext_resource type="Script" uid="uid://chxjeikcdv450" path="res://scripts/tile.gd" id="1_jef1o"]
+[ext_resource type="Script" uid="uid://bhj62vi0j1fup" path="res://scripts/tile.gd" id="1_jef1o"]
 [ext_resource type="Texture2D" uid="uid://25a4fnx3v4i8" path="res://assets/graphics/bricks.png" id="2_wtw0c"]
 
 [node name="Tile" type="Node2D"]
 script = ExtResource("1_jef1o")
 solid = true
-metadata/_custom_type_script = "uid://chxjeikcdv450"
 
 [node name="Bricks" type="Sprite2D" parent="."]
 texture = ExtResource("2_wtw0c")

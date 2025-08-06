@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://dcajlm1lisl56"]
+
+[ext_resource type="Script" uid="uid://xewqkjtvb165" path="res://scripts/ability.gd" id="1_1u4uj"]
+[ext_resource type="Script" uid="uid://biv1o4xwjpmyq" path="res://scripts/abilities.gd" id="2_32s3a"]
+[ext_resource type="PackedScene" uid="uid://bvps27tngppph" path="res://scenes/visuals/flash.tscn" id="3_6ni4c"]
+[ext_resource type="Texture2D" uid="uid://cqe0xl8ym4ypt" path="res://assets/graphics/growth.png" id="4_u1ihh"]
+
+[sub_resource type="Resource" id="Resource_u1ihh"]
+script = ExtResource("2_32s3a")
+growing = true
+hungry = false
+smart = false
+turd = false
+gun = false
+metadata/_custom_type_script = "uid://biv1o4xwjpmyq"
+
+[node name="Growth" type="Node2D"]
+script = ExtResource("1_1u4uj")
+abilities = SubResource("Resource_u1ihh")
+flash_scene = ExtResource("3_6ni4c")
+solid = true
+tasty = true
+metadata/_custom_type_script = "uid://chxjeikcdv450"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("4_u1ihh")

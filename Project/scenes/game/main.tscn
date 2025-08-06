@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://bip1fxcet1apf"]
+
+[ext_resource type="Shader" uid="uid://x5ck6cv4rwf1" path="res://resources/upscale.gdshader" id="1_oekm8"]
+[ext_resource type="PackedScene" uid="uid://bcjp0wvmn8hpa" path="res://scenes/world/rooms/start.tscn" id="2_oekm8"]
+[ext_resource type="Script" uid="uid://dfgvxxrjs65bq" path="res://scripts/room_manager.gd" id="2_yd8kv"]
+[ext_resource type="Resource" uid="uid://bughbyajjrqnr" path="res://resources/world_map.tres" id="3_uaf1y"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4fpmr"]
+shader = ExtResource("1_oekm8")
+shader_parameter/THRESHOLD = 0.001
+shader_parameter/AA_SCALE = 11.0
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+material = SubResource("ShaderMaterial_4fpmr")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(128, 128)
+render_target_update_mode = 4
+
+[node name="RoomManager" type="Node" parent="SubViewportContainer/SubViewport" node_paths=PackedStringArray("room")]
+script = ExtResource("2_yd8kv")
+world = ExtResource("3_uaf1y")
+room = NodePath("Start")
+
+[node name="Start" parent="SubViewportContainer/SubViewport/RoomManager" instance=ExtResource("2_oekm8")]

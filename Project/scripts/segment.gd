@@ -25,6 +25,12 @@ const BENT_ROTATIONS: Dictionary[Array, int] = {
 	[DIR_LEFT, DIR_DOWN]: -90,
 }
 
+
+func _process(_delta: float) -> void:
+	if auto_position and Engine.is_editor_hint():
+		tile_position = global_position / 8
+
+
 # Make the segment look like the proper part of the snake
 # Prev is the segment closer to the HEAD, as the head is first
 # Next is the segment closer to the TAIL, as the tail is last

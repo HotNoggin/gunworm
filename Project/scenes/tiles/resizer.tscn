@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsyqt071p1jm8"]
+
+[ext_resource type="Script" uid="uid://ckn4uv2xe4r7h" path="res://scripts/checkpoint.gd" id="1_g4arb"]
+[ext_resource type="Texture2D" uid="uid://dk46wwrmfe2de" path="res://assets/graphics/resizer.png" id="2_f66v1"]
+
+[node name="Resizer" type="Node2D"]
+script = ExtResource("1_g4arb")
+metadata/_custom_type_script = "uid://ckn4uv2xe4r7h"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_f66v1")

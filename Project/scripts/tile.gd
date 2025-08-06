@@ -6,7 +6,7 @@ signal moved
 
 static var grid: Dictionary[Vector2i, Tile]
 static var ground: Dictionary[Vector2i, Tile]
-static var all_tiles: Array 
+static var all_tiles: Array[Tile]
 
 @export var solid: bool = false
 @export var tasty: bool = false
@@ -18,6 +18,7 @@ static var all_tiles: Array
 		moved.emit()
 @export var auto_position: bool = true
 
+
 static func update() -> void:
 	grid.clear()
 	ground.clear()
@@ -27,6 +28,26 @@ static func update() -> void:
 		else:
 			ground[tile.tile_position] = tile
 		tile.place()
+
+
+static func do_turns() -> void:
+	# General ordering rules:
+	# ground tiles before solid tiles
+	# worm stuff before general stuff
+	# specific tiles before groups of tile types
+	var remaining: Array[Tile]
+	remaining = do_type(all_tiles, Checkpoint)
+	remaining = do_type(remaining, Tile)
+	do_type(remaining, Tile)
+
+static func do_type(tiles: Array[Tile], type: Script) -> Array[Tile]:
+	var remaining: Array[Tile] = tiles.duplicate()
+	for tile: Tile in tiles:
+		if tile.get_script() == type:
+			tile.act()
+			remaining.erase(tile)
+	return remaining
+
 
 static func has(where: Vector2i, gnd: bool = false) -> bool:
 	return Tile.ground.has(where) if gnd else Tile.grid.has(where)
@@ -44,6 +65,10 @@ func _ready() -> void:
 	update()
 
 
+func act() -> void:
+	pass
+
+
 func place() -> void:
 	if Engine.is_editor_hint():
 		return
@@ -51,9 +76,13 @@ func place() -> void:
 
 
 func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		return
 	Tile.all_tiles.append(self)
 
 
 func _exit_tree() -> void:
+	if Engine.is_editor_hint():
+		return
 	Tile.all_tiles.erase(self)
 	update()

@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://hpstftxiuabe"]
+
+[ext_resource type="Script" uid="uid://bhj62vi0j1fup" path="res://scripts/tile.gd" id="1_cbxql"]
+[ext_resource type="Texture2D" uid="uid://bdlrvfl6c3tg8" path="res://assets/graphics/stone.png" id="2_cbxql"]
+
+[node name="Tile" type="Node2D"]
+script = ExtResource("1_cbxql")
+solid = true
+brittle = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_cbxql")

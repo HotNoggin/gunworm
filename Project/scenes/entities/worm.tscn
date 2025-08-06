@@ -1,0 +1,26 @@
+[gd_scene load_steps=9 format=3 uid="uid://coo06qum3b02y"]
+
+[ext_resource type="Script" uid="uid://cevhciism2lpe" path="res://scripts/worm.gd" id="1_7nyi5"]
+[ext_resource type="PackedScene" uid="uid://bun5wf1rv748r" path="res://scenes/tiles/segment.tscn" id="2_txa0p"]
+[ext_resource type="PackedScene" uid="uid://b0qscbp78dc5x" path="res://scenes/tiles/turd.tscn" id="3_3li20"]
+[ext_resource type="PackedScene" uid="uid://clmju2uawhbri" path="res://scenes/tiles/snip.tscn" id="4_nvfjc"]
+[ext_resource type="PackedScene" uid="uid://bvps27tngppph" path="res://scenes/visuals/flash.tscn" id="5_yj646"]
+[ext_resource type="Resource" uid="uid://o5jgy6ykmpok" path="res://resources/worm_data.tres" id="6_3li20"]
+[ext_resource type="Texture2D" uid="uid://bsdf1ydx5rwk5" path="res://assets/graphics/dead_worm.png" id="6_17b26"]
+[ext_resource type="Resource" uid="uid://gdw6naj3wfgj" path="res://resources/worm_abilities.tres" id="8_3li20"]
+
+[node name="Worm" type="Node" node_paths=PackedStringArray("reset_timer")]
+script = ExtResource("1_7nyi5")
+segments_scene = ExtResource("2_txa0p")
+turd_scene = ExtResource("3_3li20")
+snip_scene = ExtResource("4_nvfjc")
+flash_scene = ExtResource("5_yj646")
+worm_data = ExtResource("6_3li20")
+dead_texture = ExtResource("6_17b26")
+reset_timer = NodePath("ResetTimer")
+able = ExtResource("8_3li20")
+metadata/_custom_type_script = "uid://cevhciism2lpe"
+
+[node name="ResetTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true

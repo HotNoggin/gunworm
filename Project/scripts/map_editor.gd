@@ -9,7 +9,9 @@ extends Node2D
 
 
 func generate_world() -> void:
+	world_map.rooms.clear()
 	for child: Node2D in get_children():
 		var where: Vector2i = child.position / 128
-		var scene: PackedScene = load(child.scene_file_path)
-		world_map.rooms[where] = scene
+		world_map.rooms[where] = child.scene_file_path
+	notify_property_list_changed()
+	ResourceSaver.save(world_map)
