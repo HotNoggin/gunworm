@@ -2,13 +2,13 @@ class_name Room
 extends Node2D
 
 @export var worm_data: WormData = preload("res://resources/worm_data.tres")
-@export var worm_scene: PackedScene = preload("res://scenes/entities/worm.tscn")
 
 var worm: Worm
 var start_data: WormData
 
 
 func _ready() -> void:
+	var worm_scene: PackedScene = load("res://scenes/entities/worm.tscn")
 	worm = worm_scene.instantiate() as Worm
 	add_child(worm)
 	worm.worm_changed.connect(worm_data.save_worm)
