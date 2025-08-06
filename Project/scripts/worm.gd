@@ -69,6 +69,7 @@ func do_turn() -> void:
 		drop_turd()
 	elif motion_dir != Vector2i.ZERO:
 		try_move()
+	adjust_worm()
 	Tile.do_turns()
 	adjust_worm()
 	worm_changed.emit(self)
